@@ -282,6 +282,11 @@ class HyperOptArgumentParser(ArgumentParser):
         trials = [self.__namespace_from_trial(x) for x in trials]
         return trials
 
+    def init(local_gpu_q):
+    # called by the Pool when a process starts
+        global g_gpu_id_q
+        g_gpu_id_q = local_gpu_q
+
     def optimize_parallel_gpu(
             self,
             train_function,
@@ -309,11 +314,6 @@ class HyperOptArgumentParser(ArgumentParser):
             gpu_q = Queue()
             for gpu_id in gpu_ids:
                 gpu_q.put(gpu_id)
-
-            # called by the Pool when a process starts
-            def init(local_gpu_q):
-                global g_gpu_id_q
-                g_gpu_id_q = local_gpu_q
 
             # init a pool with the nb of worker threads we want
             nb_workers = len(gpu_ids)
@@ -348,11 +348,6 @@ class HyperOptArgumentParser(ArgumentParser):
             gpu_q = Queue()
             for gpu_id in gpu_ids:
                 gpu_q.put(gpu_id)
-
-            # called by the Pool when a process starts
-            def init(local_gpu_q):
-                global g_gpu_id_q
-                g_gpu_id_q = local_gpu_q
 
             # init a pool with the nb of worker threads we want
             self.pool = Pool(processes=nb_workers, initializer=init, initargs=(gpu_q,))
