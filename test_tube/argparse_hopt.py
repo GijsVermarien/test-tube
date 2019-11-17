@@ -7,7 +7,8 @@ import re
 import traceback
 from argparse import ArgumentParser
 from copy import deepcopy
-from multiprocessing import Pool, Queue
+from multiprocessing import Queue
+from multiprocessing.pool import ThreadPool as Pool
 from time import sleep
 import numpy as np
 from .hyper_opt_utils import strategies
